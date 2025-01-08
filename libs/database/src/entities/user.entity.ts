@@ -1,9 +1,10 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, Max, Min } from 'class-validator';
+import { MessageEntity } from './message.entity';
 
-@Entity()
+@Entity({ schema: 'user', name: 'users' })
 export class UserEntity extends BaseEntity {
   @ApiProperty()
   @IsEmail()
@@ -32,4 +33,10 @@ export class UserEntity extends BaseEntity {
   @ApiProperty()
   @Column({ type: 'varchar', length: 255 })
   lastName: string;
+
+  @OneToMany(() => MessageEntity, (message) => message.sender)
+  messages: MessageEntity[];
+
+  @OneToMany(() => MessageEntity, (message) => message.receiver)
+  receivedMessages: MessageEntity[];
 }
