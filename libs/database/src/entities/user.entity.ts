@@ -1,8 +1,16 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, Max, Min } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { MessageEntity } from './message.entity';
+import { UserRoleEunm } from '../enums/role.enum';
 
 @Entity({ schema: 'user', name: 'users' })
 export class UserEntity extends BaseEntity {
@@ -33,6 +41,10 @@ export class UserEntity extends BaseEntity {
   @ApiProperty()
   @Column({ type: 'varchar', length: 255 })
   lastName: string;
+
+  @ApiProperty()
+  @IsEnum({ type: UserRoleEunm, default: UserRoleEunm.USER })
+  role: UserRoleEunm;
 
   @OneToMany(() => MessageEntity, (message) => message.sender)
   messages: MessageEntity[];

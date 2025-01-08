@@ -1,10 +1,23 @@
 import { Module } from '@nestjs/common';
-import { UserServiceController } from './user-service.controller';
-import { UserServiceService } from './user-service.service';
+import { AuthController, AuthService } from './auth';
+import { UserService } from './users/users.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserRepository } from './users/users.respository';
+import { datasource } from '@app/database/config';
 
+const repository = [UserRepository];
 @Module({
-  imports: [],
-  controllers: [UserServiceController],
-  providers: [UserServiceService],
+  imports: [
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        ...datasource.options,
+        autoLoadEntities: true,
+      }),
+    }),
+
+    TypeOrmModule.forFeature([...repository]),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, UserService],
 })
 export class UserServiceModule {}
