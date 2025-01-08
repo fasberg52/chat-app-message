@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/messaging-app/main",
     "start:api-gateway": "nest start api-gateway",
-    "start:user-service": "nest start user-service",
+    "start:user-service": "nest start user-service --watch",
     "start:messaging-service": "nest start messaging-service",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",

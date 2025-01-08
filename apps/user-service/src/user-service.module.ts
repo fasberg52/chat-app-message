@@ -4,6 +4,10 @@ import { UserService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from './users/users.respository';
 import { datasource } from '@app/database/config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtGuard } from './auth/guards/jwt.guard';
+import { RoleGuard } from './auth/guards/role.guard';
+import { JwtService } from '@nestjs/jwt';
 
 const repository = [UserRepository];
 @Module({
@@ -18,6 +22,18 @@ const repository = [UserRepository];
     TypeOrmModule.forFeature([...repository]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService],
+  providers: [
+    JwtService,
+    AuthService,
+    UserService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
+    },
+  ],
 })
 export class UserServiceModule {}
