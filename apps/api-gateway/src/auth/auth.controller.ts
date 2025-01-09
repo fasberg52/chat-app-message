@@ -1,21 +1,21 @@
+import { Public } from '@app/common/decorators/public.decorator';
 import { LoginDto } from '@app/shared/dtos/auth';
-import { Body, Controller, Post } from '@nestjs/common';
-import { Client, ClientProxy, Transport } from '@nestjs/microservices';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Headers, Inject, Post } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { firstValueFrom } from 'rxjs';
 
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
-  @Client({
-    transport: Transport.TCP,
-    options: { host: 'user-service', port: 3001 },
-  })
-  private userServiceClient: ClientProxy;
+  constructor(@Inject('USER_SERVICE') private userServiceClient: ClientProxy) {}
 
-  @ApiOkResponse()
+  @ApiCreatedResponse()
+  @Public()
   @Post('login')
-  async login(@Body() data: LoginDto) {
-    return firstValueFrom(this.userServiceClient.send('auth.login', data));
+  async login(@Body() data: LoginDto, @Headers() headers: any) {
+    return firstValueFrom(
+      this.userServiceClient.send('auth.login', { data, headers }),
+    );
   }
 }

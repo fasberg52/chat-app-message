@@ -1,25 +1,34 @@
 import { Module } from '@nestjs/common';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import {
+  ClientProxyFactory,
+  ClientsModule,
+  Transport,
+} from '@nestjs/microservices';
 import { MicroserviceNameEnum } from './enum/microservice-name.enum';
+import { AuthController } from './auth/auth.controller';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [
-    ClientsModule.register([
-      {
-        name: MicroserviceNameEnum.USER_SERVICE,
-        transport: Transport.TCP,
-        options: { host: 'user-service', port: 3001 },
+  imports: [],
+  controllers: [ApiGatewayController, AuthController],
+  providers: [
+    ConfigService,
+    ApiGatewayService,
+    {
+      provide: 'USER_SERVICE',
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return ClientProxyFactory.create({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('USER_SERVICE_HOST'),
+            port: configService.get('USER_SERVICE_PORT'),
+          },
+        });
       },
-      {
-        name: MicroserviceNameEnum.MESSAGE_SERVICE,
-        transport: Transport.TCP,
-        options: { host: 'user-service', port: 3002 },
-      },
-    ]),
+    },
   ],
-  controllers: [ApiGatewayController],
-  providers: [ApiGatewayService],
 })
 export class ApiGatewayModule {}
