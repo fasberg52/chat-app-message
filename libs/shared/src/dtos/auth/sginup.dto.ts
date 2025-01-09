@@ -1,9 +1,20 @@
-import { UserEntity } from '@app/database';
-import { PickType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString } from 'class-validator';
 
-export class SignupDto extends PickType(UserEntity, [
-  'email',
-  'firstName',
-  'lastName',
-  'password',
-] as const) {}
+export class SignupDto {
+  @ApiProperty()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty()
+  @IsString()
+  password: string;
+
+  @ApiProperty()
+  @IsString()
+  firstName: string;
+
+  @ApiProperty()
+  @IsString()
+  lastName: string;
+}

@@ -1,11 +1,15 @@
-import { datasource, UserEntity } from '@app/database';
+import { UserEntity } from '@app/database';
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class UserRepository extends Repository<UserEntity> {
-  constructor() {
-    super(UserEntity, datasource.createEntityManager());
+  constructor(
+    private dataSource: DataSource,
+    private configService: ConfigService,
+  ) {
+    super(UserEntity, dataSource.createEntityManager());
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
