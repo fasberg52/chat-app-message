@@ -22,14 +22,15 @@ export class AuthController {
   })
   private userServiceClient: ClientProxy;
 
-  @ApiOkResponse()
+  @ApiOkResponse(TokenResponse.getApiDoc())
   @Public()
   @Post('login')
-  async login(@Body() data: LoginDto) {
+  async login(@Body() data: LoginDto): Promise<TokenResponse> {
     try {
-      return await firstValueFrom(
+      const result = await firstValueFrom(
         this.userServiceClient.send('auth.login', data),
       );
+      return new TokenResponse(result.accessToken);
     } catch (error) {
       const { message, statusCode } = error;
       throw new HttpException(
