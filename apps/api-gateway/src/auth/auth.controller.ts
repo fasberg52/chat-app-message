@@ -10,6 +10,7 @@ import {
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { firstValueFrom } from 'rxjs';
+import { TokenResponse } from '../responses/user/token.response';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -26,7 +27,6 @@ export class AuthController {
   @Post('login')
   async login(@Body() data: LoginDto) {
     try {
-      console.log(`login >>> ${data}`);
       return await firstValueFrom(
         this.userServiceClient.send('auth.login', data),
       );
@@ -39,15 +39,15 @@ export class AuthController {
     }
   }
 
-  @ApiOkResponse()
+  @ApiOkResponse(TokenResponse.getApiDoc())
   @Public()
   @Post('signup')
-  async signup(@Body() data: SignupDto) {
-    console.log(`signup >>> ${data}`);
+  async signup(@Body() data: SignupDto): Promise<TokenResponse> {
     try {
-      return await firstValueFrom(
+      const result = await firstValueFrom(
         this.userServiceClient.send('auth.signup', data),
       );
+      return new TokenResponse(result.accessToken);
     } catch (error) {
       const { message, statusCode } = error;
       throw new HttpException(
