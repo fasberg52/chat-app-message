@@ -1,5 +1,7 @@
 import { DataSource } from 'typeorm';
 import { config as dotenvConfig } from 'dotenv';
+import { UserEntity } from './entities/user.entity';
+import { MessageEntity } from './entities/message.entity';
 
 dotenvConfig({ path: '.env' });
 
@@ -10,7 +12,7 @@ export const datasource = new DataSource({
   username: process.env.DATABASE_USERNAME,
   database: process.env.DATABASE_NAME,
   password: `${process.env.DATABASE_PASSWORD}`,
-  entities: [__dirname + '/entities/*.entity.ts'],
+  entities: [UserEntity, MessageEntity],
   migrations: [__dirname + '/migrations/*.ts'],
   synchronize: false,
   logging: false,

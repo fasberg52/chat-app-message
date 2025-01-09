@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import '../';
+import '../../../../user-service/src/auth';
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
   private readonly logger = new Logger(JwtGuard.name);

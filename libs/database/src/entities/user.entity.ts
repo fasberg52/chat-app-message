@@ -44,6 +44,7 @@ export class UserEntity extends BaseEntity {
 
   @ApiProperty()
   @IsEnum({ type: UserRoleEunm, default: UserRoleEunm.USER })
+  @Column({ type: 'enum', enum: UserRoleEunm, default: UserRoleEunm.USER })
   role: UserRoleEunm;
 
   @OneToMany(() => MessageEntity, (message) => message.sender)

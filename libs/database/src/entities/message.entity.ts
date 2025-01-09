@@ -1,4 +1,10 @@
-import { Column, DeleteDateColumn, Entity, ManyToOne } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
@@ -37,8 +43,10 @@ export class MessageEntity extends BaseEntity {
   deletedAt: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.messages)
+  @JoinColumn({ name: 'senderId' })
   sender: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.messages)
+  @JoinColumn({ name: 'receiverId' })
   receiver: UserEntity;
 }

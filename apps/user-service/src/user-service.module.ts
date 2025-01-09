@@ -4,10 +4,9 @@ import { UserService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from './users/users.respository';
 import { datasource } from '@app/database/config';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtGuard } from './auth/guards/jwt.guard';
-import { RoleGuard } from './auth/guards/role.guard';
-import { JwtService } from '@nestjs/jwt';
+
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 const repository = [UserRepository];
 @Module({
@@ -20,20 +19,26 @@ const repository = [UserRepository];
     }),
 
     TypeOrmModule.forFeature([...repository]),
+
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '7d' },
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AuthController],
   providers: [
+    ConfigService,
     JwtService,
     AuthService,
     UserService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RoleGuard,
-    },
+    ...repository,
   ],
+  exports: [UserService],
 })
 export class UserServiceModule {}
