@@ -15,6 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -27,12 +28,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       {
         name: MicroserviceNameEnum.USER_SERVICE,
         transport: Transport.TCP,
-        options: { host: '127.0.0.1', port: 3001 },
+        options: {
+          host: new ConfigService().get<string>('USER_SERVICE_HOST'),
+          port: new ConfigService().get<number>('USER_SERVICE_PORT'),
+        },
       },
       {
         name: MicroserviceNameEnum.MESSAGE_SERVICE,
         transport: Transport.TCP,
-        options: { host: '127.0.0.1', port: 3002 },
+        options: {
+          host: new ConfigService().get<string>('MESSAGE_SERVICE_HOST'),
+          port: new ConfigService().get<number>('MESSAGE_SERVICE_PORT'),
+        },
       },
     ]),
   ],
