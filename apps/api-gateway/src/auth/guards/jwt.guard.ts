@@ -1,21 +1,16 @@
-import { IS_PUBLIC_KEY } from '@app/common/decorators/public.decorator';
-import {
-  ExecutionContext,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
-import '../../../../user-service/src/auth';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { Reflector } from '@nestjs/core';
+import { IS_PUBLIC_KEY } from '@app/common/decorators/public.decorator';
+
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
-  private readonly logger = new Logger(JwtGuard.name);
   constructor(
-    private readonly jwtService: JwtService,
-    private readonly reflector: Reflector,
+    private reflector: Reflector,
+    private jwtService: JwtService,
+    private configService: ConfigService,
   ) {
     super();
   }
@@ -26,32 +21,29 @@ export class JwtGuard extends AuthGuard('jwt') {
       context.getClass(),
     ]);
 
-    const request = context.switchToHttp().getRequest<Request>();
-    const { method, url } = request;
-
     if (isPublic) {
-      this.logger.log(`Public route accessed: ${method} ${url}`);
       return true;
     }
 
+    const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
+
     if (!token) {
-      this.logger.warn('no token found in req');
-      throw new UnauthorizedException();
+      return false;
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token);
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
       request.user = payload;
-    } catch (error) {
-      this.logger.error(`token verification fail: ${error.message}`);
-      throw new UnauthorizedException();
+      return true;
+    } catch {
+      return false;
     }
-
-    return super.canActivate(context) as Promise<boolean>;
   }
 
-  private extractTokenFromHeader(request: Request): string | undefined {
+  private extractTokenFromHeader(request: any): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }

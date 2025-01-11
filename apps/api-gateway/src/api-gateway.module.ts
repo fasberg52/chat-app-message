@@ -1,10 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ApiGatewayService } from './api-gateway.service';
-import {
-  ClientProxyFactory,
-  ClientsModule,
-  Transport,
-} from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MicroserviceNameEnum } from './enum/microservice-name.enum';
 import { AuthController } from './auth/auth.controller';
 import { APP_GUARD } from '@nestjs/core';
@@ -12,6 +8,7 @@ import { JwtGuard } from 'apps/api-gateway/src/auth/guards/jwt.guard';
 import { RoleGuard } from './auth/guards/role.guard';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MessageGateway } from './gateway-message/message.gateway';
 
 @Module({
   imports: [
@@ -45,6 +42,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],
   controllers: [AuthController],
   providers: [
+    MessageGateway,
     JwtService,
     ApiGatewayService,
 

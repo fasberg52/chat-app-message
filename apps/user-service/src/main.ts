@@ -1,6 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { UserServiceModule } from './user-service.module';
-import { MicroserviceOptions, TcpOptions, Transport } from '@nestjs/microservices';
+import {
+  MicroserviceOptions,
+  TcpOptions,
+  Transport,
+} from '@nestjs/microservices';
 import { MicroExceptionFilter } from '@app/common/filters/rpc-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 

@@ -55,7 +55,7 @@ export class AuthService {
     console.log(dto);
     const user = await this.userService.findByEmail(dto.email);
     if (!user) {
-      throw new NotFoundRpcException('کاربری با این ایمیل یافت نشد');
+      throw new NotFoundRpcException('نام کاربری یا رمز عبور اشتباه است');
     }
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
     if (!isPasswordValid) {

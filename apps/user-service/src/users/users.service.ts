@@ -16,7 +16,7 @@ export class UserService {
   async findByEmail(email: string) {
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
-      throw new NotFoundRpcException('کاربری با این ایمیل یافت نشد');
+      throw new NotFoundRpcException('نام کاربری یا رمز عبور اشتباه است');
     }
     return user;
   }

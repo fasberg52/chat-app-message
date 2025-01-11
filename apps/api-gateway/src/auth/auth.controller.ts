@@ -18,7 +18,10 @@ import { TokenResponse } from '../responses/user/token.response';
 export class AuthController {
   @Client({
     transport: Transport.TCP,
-    options: { host: '127.0.0.1', port: 3001 },
+    options: {
+      host: '127.0.0.1',
+      port: 3001,
+    },
   })
   private userServiceClient: ClientProxy;
 

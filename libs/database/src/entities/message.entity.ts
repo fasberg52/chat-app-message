@@ -7,8 +7,15 @@ import {
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 import { UserEntity } from './user.entity';
+import { MessageTypeEnum } from '../enums/message.enum';
 
 @Entity({ schema: 'message', name: 'messages' })
 export class MessageEntity extends BaseEntity {
@@ -35,6 +42,16 @@ export class MessageEntity extends BaseEntity {
   @IsBoolean()
   @Column({ type: 'boolean', default: false })
   isRead: boolean;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEnum({ type: MessageTypeEnum, default: MessageTypeEnum.TEXT })
+  @Column({
+    type: 'enum',
+    enum: MessageTypeEnum,
+    default: MessageTypeEnum.TEXT,
+  })
+  type: MessageTypeEnum;
 
   @DeleteDateColumn({
     type: 'timestamp',
