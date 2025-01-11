@@ -9,11 +9,13 @@ import { RoleGuard } from './auth/guards/role.guard';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MessageGateway } from './gateway-message/message.gateway';
+import { WsAuthGuard } from './auth/guards/ws-jwt.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     JwtModule.registerAsync({
+      
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
@@ -50,6 +52,7 @@ import { MessageGateway } from './gateway-message/message.gateway';
       provide: APP_GUARD,
       useClass: JwtGuard,
     },
+
     {
       provide: APP_GUARD,
       useClass: RoleGuard,

@@ -16,11 +16,9 @@ import { ClientProxy, Client, Transport } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { WsJwtGuard } from '../auth/guards/ws-jwt.guard';
 
 @Injectable()
 @WebSocketGateway(8080, { cors: { origin: '*' } })
-//@UseGuards(WsJwtGuard)
 export class MessageGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
@@ -47,7 +45,7 @@ export class MessageGateway
   @SubscribeMessage('sendMessage')
   async handleMessage(
     @ConnectedSocket() client: WebSocket,
-    @MessageBody() data: any,
+    @MessageBody() data: SendMessageDto,
   ): Promise<WsResponse<any>> {
     console.log('Triggered sendMessage event:', data);
 
@@ -58,13 +56,9 @@ export class MessageGateway
       throw new WsException('Invalid message data');
     }
 
-    const senderId = 2;
-    console.log(`Validated message from senderId: ${senderId}`, data);
-
     const result = await firstValueFrom(
       this.messageServiceClient.send('messages.sendMessage', {
         ...data,
-        senderId,
       }),
     );
     console.log('result', result);
@@ -74,12 +68,14 @@ export class MessageGateway
     });
     return { event: 'sendMessage', data: result };
   }
+
   @SubscribeMessage('getMessages')
   async getMessages(
-    @ConnectedSocket() client: WebSocket,
+    @ConnectedSocket() client: WebSocket & { user?: any },
     @MessageBody() receiverId: number,
   ) {
-    const userId = client['user']?.id;
+    const userId = client.user?.id;
+    console.log('getMessages', userId, receiverId);
     const result = await this.messageServiceClient
       .send('getMessages', {
         userId,

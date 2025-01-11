@@ -2,8 +2,9 @@ import { Controller } from '@nestjs/common';
 import { MessageService } from '../services/message.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateMessageDto } from '@app/shared/dtos/message/create-message.dto';
+import { SendMessageDto } from '@app/shared/dtos/message/send-message.dto';
 
-@Controller('messages')
+@Controller()
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
@@ -13,7 +14,9 @@ export class MessageController {
   }
 
   @MessagePattern('messages.sendMessage')
-  async handleMessage(data: any) {
+  async handleMessage(@Payload() data: CreateMessageDto) {
+    console.log('Received message:', data);
+    await this.messageService.createMessage(data);
     console.log('Received message:', data);
     return { status: 'success', data: data };
   }

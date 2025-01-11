@@ -37,11 +37,11 @@ export class MessageEntity extends BaseEntity {
   @Column({ type: 'text' })
   content: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsBoolean()
-  @Column({ type: 'boolean', default: false })
-  isRead: boolean;
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsBoolean()
+  // @Column({ type: 'boolean', default: false })
+  // isRead: boolean;
 
   @ApiProperty()
   @IsNotEmpty()

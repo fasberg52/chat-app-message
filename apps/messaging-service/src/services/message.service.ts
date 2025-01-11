@@ -12,7 +12,11 @@ export class MessageService {
   ) {}
 
   async createMessage(data: CreateMessageDto): Promise<MessageEntity> {
-    const message = this.messageRepository.create(data);
+    const newMessage = {
+      ...data,
+      createdAt: new Date(),
+    };
+    const message = this.messageRepository.create(newMessage);
     return this.messageRepository.save(message);
   }
 

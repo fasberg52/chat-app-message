@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { MessagingServiceModule } from './messaging-service.module';
-import { MicroExceptionFilter } from '@app/common/filters/rpc-exception.filter';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -15,15 +14,9 @@ async function bootstrap() {
       },
     },
   );
-  app.useGlobalFilters(new MicroExceptionFilter());
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen();
-  console.log(`Messaging service is running on http://localhost:3002`);
+  console.log('Messaging service is running on port 3002');
 }
 bootstrap();

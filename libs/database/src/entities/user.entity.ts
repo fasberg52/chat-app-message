@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, Relation } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import { MessageEntity } from './message.entity';
 import { UserRoleEunm } from '../enums/role.enum';
+import { NotificationItemEntity } from './notification-item.entity';
 
 @Entity({ schema: 'user', name: 'users' })
 export class UserEntity extends BaseEntity {
@@ -52,4 +53,10 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => MessageEntity, (message) => message.receiver)
   receivedMessages: MessageEntity[];
+
+  @OneToMany(
+    () => NotificationItemEntity,
+    (notificationItem) => notificationItem.users,
+  )
+  notificationItems: Relation<NotificationItemEntity>;
 }

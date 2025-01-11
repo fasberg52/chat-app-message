@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MessageEntity } from '@app/database/entities/message.entity';
 import { MessageService } from './services/message.service';
 import { datasource } from '@app/database/config';
+import { MessageController } from './controllers/message.controller';
 
 @Module({
   imports: [
@@ -27,5 +28,6 @@ import { datasource } from '@app/database/config';
     }),
   ],
   providers: [MessageService],
+  controllers: [MessageController],
 })
 export class MessagingServiceModule {}
