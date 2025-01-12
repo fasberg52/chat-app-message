@@ -65,6 +65,9 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      messaging-service:
+        specifier: 0.1.2-b2
+        version: 0.1.2-b2(@angular/common@9.0.1(@angular/core@9.0.1(rxjs@7.8.1)(tslib@2.8.1)(zone.js@0.10.3))(rxjs@7.8.1)(tslib@2.8.1))(@angular/core@9.0.1(rxjs@7.8.1)(tslib@2.8.1)(zone.js@0.10.3))(tslib@2.8.1)
       multer:
         specifier: 1.4.5-lts.1
         version: 1.4.5-lts.1
@@ -189,6 +192,20 @@ packages:
   '@angular-devkit/schematics@17.3.11':
     resolution: {integrity: sha512-I5wviiIqiFwar9Pdk30Lujk8FczEEc18i22A5c6Z9lbmhPQdTroDnEQdsfXjy404wPe8H62s0I15o4pmMGfTYQ==}
     engines: {node: ^18.13.0 || >=20.9.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+
+  '@angular/common@9.0.1':
+    resolution: {integrity: sha512-40jbKdCb4xi6NTzLt1kE0V/X7JxCLLo8eUEr3Z34Z9Ljnd4LC+/CkuThPdQJ3HW1Z8r5SWXj+rES+sn75YNVmA==}
+    peerDependencies:
+      '@angular/core': 9.0.1
+      rxjs: ^6.5.3
+      tslib: ^1.10.0
+
+  '@angular/core@9.0.1':
+    resolution: {integrity: sha512-q/3VLGM98euB/ZluSuMqvWyQb563iabRcVkC/DrHqCQMadV1ZpvuOgf8Gm092d8GY/iC4CGlTsN0wiVapMxplQ==}
+    peerDependencies:
+      rxjs: ^6.5.3
+      tslib: ^1.10.0
+      zone.js: ~0.10.2
 
   '@babel/code-frame@7.26.2':
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
@@ -2286,6 +2303,13 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
+  messaging-service@0.1.2-b2:
+    resolution: {integrity: sha512-rW5G3JvNRVvQ0/fXz2UKMQWWDbWu+zw2sGFP64LlNMlyh8xcWfM9yTvglMvmz0pUne6fkqCDkuRvviBntHwaHA==}
+    peerDependencies:
+      '@angular/common': 9.0.1
+      '@angular/core': 9.0.1
+      tslib: ^1.10.0
+
   methods@1.1.2:
     resolution: {integrity: sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==}
     engines: {node: '>= 0.6'}
@@ -3325,6 +3349,9 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zone.js@0.10.3:
+    resolution: {integrity: sha512-LXVLVEq0NNOqK/fLJo3d0kfzd4sxwn2/h67/02pjCjfKDxgx1i9QqpvtHD8CrBnSSwMw5+dy11O7FRX5mkO7Cg==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -3363,6 +3390,18 @@ snapshots:
       rxjs: 7.8.1
     transitivePeerDependencies:
       - chokidar
+
+  '@angular/common@9.0.1(@angular/core@9.0.1(rxjs@7.8.1)(tslib@2.8.1)(zone.js@0.10.3))(rxjs@7.8.1)(tslib@2.8.1)':
+    dependencies:
+      '@angular/core': 9.0.1(rxjs@7.8.1)(tslib@2.8.1)(zone.js@0.10.3)
+      rxjs: 7.8.1
+      tslib: 2.8.1
+
+  '@angular/core@9.0.1(rxjs@7.8.1)(tslib@2.8.1)(zone.js@0.10.3)':
+    dependencies:
+      rxjs: 7.8.1
+      tslib: 2.8.1
+      zone.js: 0.10.3
 
   '@babel/code-frame@7.26.2':
     dependencies:
@@ -5936,6 +5975,12 @@ snapshots:
 
   merge2@1.4.1: {}
 
+  messaging-service@0.1.2-b2(@angular/common@9.0.1(@angular/core@9.0.1(rxjs@7.8.1)(tslib@2.8.1)(zone.js@0.10.3))(rxjs@7.8.1)(tslib@2.8.1))(@angular/core@9.0.1(rxjs@7.8.1)(tslib@2.8.1)(zone.js@0.10.3))(tslib@2.8.1):
+    dependencies:
+      '@angular/common': 9.0.1(@angular/core@9.0.1(rxjs@7.8.1)(tslib@2.8.1)(zone.js@0.10.3))(rxjs@7.8.1)(tslib@2.8.1)
+      '@angular/core': 9.0.1(rxjs@7.8.1)(tslib@2.8.1)(zone.js@0.10.3)
+      tslib: 2.8.1
+
   methods@1.1.2: {}
 
   micromatch@4.0.8:
@@ -6909,3 +6954,5 @@ snapshots:
   yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zone.js@0.10.3: {}

@@ -29,6 +29,34 @@ services:
       - nest-network
     command: npm run start:dev user-service
 
+  notification-service:
+    build:
+      context: .
+      dockerfile: ./apps/notification-service/Dockerfile
+    ports:
+      - '3003:3003'
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    networks:
+      - nest-network
+    command: npm run start:dev notification-service
+
+  messaging-service:
+    build:
+      context: .
+      dockerfile: ./apps/messaging-service/Dockerfile
+    ports:
+      - '3002:3002'
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    networks:
+      - nest-network
+    command: npm run start:dev messaging-service    
+
   postgres:
     image: postgres:latest
     restart: always
