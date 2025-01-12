@@ -14,7 +14,7 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        host: process.env.NOTIFICATION_SERVICE_HOST,
+        host: process.env.PUBLIC_HOST,
         port: parseInt(process.env.NOTIFICATION_SERVICE_PORT),
       },
     } as TcpOptions,
@@ -29,7 +29,7 @@ async function bootstrap() {
   );
   await app.listen();
   console.log(
-    `user service running port ${process.env.NOTIFICATION_SERVICE_PORT}`,
+    `notification service running port ${process.env.NOTIFICATION_SERVICE_PORT}`,
   );
 }
 bootstrap();

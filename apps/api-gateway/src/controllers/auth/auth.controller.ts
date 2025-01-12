@@ -10,7 +10,7 @@ import {
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { firstValueFrom } from 'rxjs';
-import { TokenResponse } from '../responses/user/token.response';
+import { TokenResponse } from '../../responses/user/token.response';
 
 @Controller('auth')
 @ApiTags('Auth')

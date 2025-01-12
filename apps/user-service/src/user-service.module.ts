@@ -39,6 +39,6 @@ const repository = [UserRepository];
     UserService,
     ...repository,
   ],
-  exports: [UserService],
+  exports: [UserService, AuthService],
 })
 export class UserServiceModule {}

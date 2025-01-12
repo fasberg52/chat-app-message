@@ -2,20 +2,19 @@ import { Module } from '@nestjs/common';
 import { ApiGatewayService } from './api-gateway.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MicroserviceNameEnum } from './enum/microservice-name.enum';
-import { AuthController } from './auth/auth.controller';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtGuard } from 'apps/api-gateway/src/auth/guards/jwt.guard';
-import { RoleGuard } from './auth/guards/role.guard';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MessageGateway } from './gateway-message/message.gateway';
-import { WsAuthGuard } from './auth/guards/ws-jwt.guard';
+import { JwtGuard } from './controllers/auth/guards/jwt.guard';
+import { RoleGuard } from './controllers/auth/guards/role.guard';
+import { NotficationController } from './controllers/notifications/notificaiton.controller';
+import { AuthController } from './controllers/auth/auth.controller';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     JwtModule.registerAsync({
-      
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
@@ -42,7 +41,7 @@ import { WsAuthGuard } from './auth/guards/ws-jwt.guard';
       },
     ]),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, NotficationController],
   providers: [
     MessageGateway,
     JwtService,

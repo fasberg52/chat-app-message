@@ -1,3 +1,4 @@
+import { UserService } from 'apps/user-service/src/users/users.service';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { datasource } from '@app/database';
@@ -8,8 +9,13 @@ import { NotificationItemController } from './controllers/notification-item.cont
 import { NotificationController } from './controllers/notification.controller';
 import { NotificationRepository } from './repositorires/notification.repository';
 import { NotificationItemRepository } from './repositorires/notification-item.repository';
+import { UserRepository } from 'apps/user-service/src/users/users.respository';
 
-const repository = [NotificationRepository, NotificationItemRepository];
+const repository = [
+  NotificationRepository,
+  NotificationItemRepository,
+  UserRepository,
+];
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -26,6 +32,11 @@ const repository = [NotificationRepository, NotificationItemRepository];
     }),
   ],
   controllers: [NotificationItemController, NotificationController],
-  providers: [NotificationItemService, NotificationService, ...repository],
+  providers: [
+    UserService,
+    NotificationItemService,
+    NotificationService,
+    ...repository,
+  ],
 })
 export class NotificationServiceModule {}

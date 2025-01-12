@@ -1,12 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  Relation,
-  JoinColumn,
-
-} from 'typeorm';
+import { Entity, Column, ManyToOne, Relation, JoinColumn } from 'typeorm';
 import { NotificationEntity } from './notification.entity';
 import { UserEntity } from './user.entity';
 import { BaseEntity } from './base.entity';

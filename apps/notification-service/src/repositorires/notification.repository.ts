@@ -11,4 +11,12 @@ export class NotificationRepository extends Repository<NotificationEntity> {
   ) {
     super(NotificationEntity, dataSource.createEntityManager());
   }
+
+  async findNotificationById(id: number) {
+    return this.findOne({ where: { id: id } });
+  }
+
+  async findAll(dto: Partial<NotificationEntity>) {
+    return this.find({ where: dto });
+  }
 }

@@ -26,4 +26,9 @@ export class UserService {
     console.log(`user is ${user}`);
     return !!user;
   }
+
+  async getUsers() {
+    const users = await this.userRepository.find();
+    return users;
+  }
 }

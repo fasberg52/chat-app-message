@@ -1,4 +1,4 @@
-export class NotificationTypeEnum {
-  PRIVATE = 'PRIVATE';
-  PUBLIC = 'PUBLIC';
+export enum NotificationTypeEnum {
+  PRIVATE = 'private',
+  PUBLIC = 'public',
 }
