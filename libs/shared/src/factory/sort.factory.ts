@@ -17,15 +17,15 @@ export function applySorting<T>(
 export function applySortingToFindOptions<T>(
   options: FindManyOptions<T>,
   sort: string | undefined,
-  sortOrder: string | undefined,
-  defaultSortField: string = 'id',
-  defaultSortOrder: 'ASC' | 'DESC' = 'DESC',
+  sortBy: string | undefined,
+  defaultSortBy: string = 'id',
+  defaultSort: 'ASC' | 'DESC' = 'DESC',
 ): FindManyOptions<T> {
-  const order = sortOrder && sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
-  const sortField = sort ? sort : defaultSortField;
+  const order = sort ? sort : defaultSort;
+  const sortField = sortBy ? sortBy : defaultSortBy;
 
   options.order = {
-    [sortField]: order || defaultSortOrder,
+    [sortField]: order || defaultSort,
   } as FindOptionsOrder<T>;
 
   return options;

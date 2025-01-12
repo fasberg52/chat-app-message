@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from '../paginate/pagination.dto';
 import { IsBoolean, IsEnum, IsIn, IsOptional, IsString } from 'class-validator';
 import { NotificationTypeEnum } from '@app/database/enums/notificatoin.enum';
@@ -14,14 +14,14 @@ export class GetNotificationsDto extends PaginationDto {
   @Transform(({ value }) => value.trim())
   type: NotificationTypeEnum;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   @Transform(({ value }) => value.trim())
   @Type(() => String)
   search: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsBoolean()
   @IsOptional()
   @Transform(({ value }) => value === 'true')
@@ -34,7 +34,7 @@ export class GetNotificationsDto extends PaginationDto {
   @Transform(({ value }) => value.trim())
   @IsIn(['ASC', 'DESC'])
   @Type(() => String)
-  sort: string;
+  sort: 'ASC' | 'DESC';
 
   @ApiPropertyOptional({ default: 'createdAt' })
   @IsString()

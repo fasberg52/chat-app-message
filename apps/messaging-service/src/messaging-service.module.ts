@@ -6,6 +6,9 @@ import { MessageEntity } from '@app/database/entities/message.entity';
 import { MessageService } from './services/message.service';
 import { datasource } from '@app/database/config';
 import { MessageController } from './controllers/message.controller';
+import { FileUploadService } from './services/file.service';
+import { FileController } from './controllers/file.controller';
+import { FileEntity } from '@app/database/entities/file.entity';
 
 @Module({
   imports: [
@@ -18,7 +21,7 @@ import { MessageController } from './controllers/message.controller';
         autoLoadEntities: true,
       }),
     }),
-    TypeOrmModule.forFeature([MessageEntity]),
+    TypeOrmModule.forFeature([MessageEntity, FileEntity]),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
@@ -27,7 +30,7 @@ import { MessageController } from './controllers/message.controller';
       inject: [ConfigService],
     }),
   ],
-  providers: [MessageService],
-  controllers: [MessageController],
+  providers: [MessageService, FileUploadService],
+  controllers: [MessageController, FileController],
 })
 export class MessagingServiceModule {}

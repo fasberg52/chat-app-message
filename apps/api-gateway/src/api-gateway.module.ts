@@ -10,6 +10,7 @@ import { JwtGuard } from './controllers/auth/guards/jwt.guard';
 import { RoleGuard } from './controllers/auth/guards/role.guard';
 import { NotficationController } from './controllers/notifications/notificaiton.controller';
 import { AuthController } from './controllers/auth/auth.controller';
+import { FileController } from './controllers/file/file.controller';
 
 @Module({
   imports: [
@@ -41,7 +42,7 @@ import { AuthController } from './controllers/auth/auth.controller';
       },
     ]),
   ],
-  controllers: [AuthController, NotficationController],
+  controllers: [AuthController, NotficationController, FileController],
   providers: [
     MessageGateway,
     JwtService,

@@ -16,7 +16,11 @@ import {
   NotificationResponse,
   NotificationsListResponse,
 } from '../../responses/notification/notification.response';
-import { CreateNotificationDto, GetNotificationsDto } from '@app/shared';
+import {
+  CreateNotificationDto,
+  CreateNotificationPrivateAdminDto,
+  GetNotificationsDto,
+} from '@app/shared';
 import { firstValueFrom } from 'rxjs';
 import { Roles } from '@app/common/decorators/role.decorator';
 import { UserRoleEunm } from '@app/database';
@@ -43,10 +47,10 @@ export class NotficationController {
     @Query() data: GetNotificationsDto,
   ): Promise<NotificationsListResponse> {
     try {
-      const result = await firstValueFrom(
+      const [result, total] = await firstValueFrom(
         this.notificationServiceClient.send('notification.get', data),
       );
-      return new NotificationsListResponse(result.result, result.total);
+      return new NotificationsListResponse(result, total);
     } catch (error) {
       const { message, statusCode } = error;
       throw new HttpException(
@@ -78,13 +82,36 @@ export class NotficationController {
 
   @ApiOkResponse(MessageResponse.getApiDoc())
   @Roles(UserRoleEunm.ADMIN)
-  @Post()
+  @Post('public')
   async createNotification(
     @Body() data: CreateNotificationDto,
   ): Promise<MessageResponse> {
     try {
       await firstValueFrom(
-        this.notificationServiceClient.send('notification.create', data),
+        this.notificationServiceClient.send('notification.create.public', data),
+      );
+      return new MessageResponse('با موفقیت ایجاد شد ');
+    } catch (error) {
+      const { message, statusCode } = error;
+      throw new HttpException(
+        message,
+        statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @ApiOkResponse(MessageResponse.getApiDoc())
+  @Roles(UserRoleEunm.ADMIN)
+  @Post('private')
+  async createNotificationPrivateAdmin(
+    @Body() data: CreateNotificationPrivateAdminDto,
+  ): Promise<MessageResponse> {
+    try {
+      await firstValueFrom(
+        this.notificationServiceClient.send(
+          'notification.create.private',
+          data,
+        ),
       );
       return new MessageResponse('با موفقیت ایجاد شد ');
     } catch (error) {

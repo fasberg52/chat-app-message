@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationItemService } from './notification-item.service';
-import { CreateNotificationDto } from '@app/shared/dtos/notification/create-notification.dto';
+import {
+  CreateNotificationDto,
+  CreateNotificationPrivateAdminDto,
+} from '@app/shared/dtos/notification/create-notification.dto';
 import { NotificationRepository } from '../repositorires/notification.repository';
 import { UpdateNotificationDto } from '@app/shared/dtos/notification/update-notification.dto';
 import { NotFoundRpcException } from '@app/common/filters/rpc.exception';
 import { GetNotificationsDto } from '@app/shared/dtos/notification/get-all-notification.dto';
-import { FindManyOptions, FindOptionsWhere } from 'typeorm';
-import { NotificationEntity } from '@app/database';
+import { EntityManager, FindManyOptions, FindOptionsWhere } from 'typeorm';
+import { NotificationEntity, NotificationItemEntity } from '@app/database';
 import { NotificationTypeEnum } from '@app/database/enums/notificatoin.enum';
 import { applySortingToFindOptions } from '@app/shared/factory/sort.factory';
 import { UserService } from 'apps/user-service/src/users/users.service';
@@ -19,16 +22,14 @@ export class NotificationService {
     private readonly notificationRepository: NotificationRepository,
   ) {}
 
-  async createNotification(dto: CreateNotificationDto) {
+  async createNotificationPublicAdmin(dto: CreateNotificationDto) {
     const notification = await this.notificationRepository.create({
       title: dto.title,
       description: dto.description,
-      type: dto.type,
+      type: NotificationTypeEnum.PUBLIC,
     });
 
     await this.notificationRepository.save(notification);
-
-    console.log(`notification created ${notification.id}`);
 
     const users = await this.userService.getUsers();
 
@@ -40,6 +41,42 @@ export class NotificationService {
       });
     }
     return notification;
+  }
+
+  async createNotificationPrivateAdmin(dto: CreateNotificationPrivateAdminDto) {
+    return this.notificationRepository.manager.transaction(
+      async (transactionalEntityManager: EntityManager) => {
+        const notification = transactionalEntityManager.create(
+          NotificationEntity,
+          {
+            title: dto.title,
+            description: dto.description,
+            type: NotificationTypeEnum.PRIVATE,
+          },
+        );
+
+        const savedNotification = await transactionalEntityManager.save(
+          NotificationEntity,
+          notification,
+        );
+
+        const notificationItem = transactionalEntityManager.create(
+          NotificationItemEntity,
+          {
+            userId: dto.userId,
+            notificationId: savedNotification.id,
+            isRead: false,
+          },
+        );
+
+        await transactionalEntityManager.save(
+          NotificationItemEntity,
+          notificationItem,
+        );
+
+        return savedNotification;
+      },
+    );
   }
 
   async updateNotification(id: number, dto: UpdateNotificationDto) {
@@ -106,13 +143,8 @@ export class NotificationService {
       skip: (page - 1) * limit,
       take: limit,
     };
-    options = applySortingToFindOptions(
-      options,
-      sort,
-      sortBy,
-      'createdAt',
-      'DESC',
-    );
+    console.log(sort, sortBy);
+    options = applySortingToFindOptions(options, sort, sortBy, 'id', 'DESC');
 
     const [notifications, count] =
       await this.notificationRepository.findAndCount(options);

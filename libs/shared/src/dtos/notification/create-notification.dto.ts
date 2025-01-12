@@ -1,8 +1,14 @@
 import { NotificationEntity } from '@app/database';
-import { PickType } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
 
 export class CreateNotificationDto extends PickType(NotificationEntity, [
   'title',
   'description',
-  'type',
 ] as const) {}
+
+export class CreateNotificationPrivateAdminDto extends CreateNotificationDto {
+  @ApiProperty()
+  @IsNumber()
+  userId: number;
+}

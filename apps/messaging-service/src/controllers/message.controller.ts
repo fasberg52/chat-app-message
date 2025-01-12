@@ -2,7 +2,6 @@ import { Controller } from '@nestjs/common';
 import { MessageService } from '../services/message.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateMessageDto } from '@app/shared/dtos/message/create-message.dto';
-import { SendMessageDto } from '@app/shared/dtos/message/send-message.dto';
 
 @Controller()
 export class MessageController {

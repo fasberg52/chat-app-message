@@ -1,7 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { NotificationService } from '../services/notification.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { CreateNotificationDto } from '@app/shared/dtos/notification/create-notification.dto';
+import {
+  CreateNotificationDto,
+  CreateNotificationPrivateAdminDto,
+} from '@app/shared/dtos/notification/create-notification.dto';
 import { GetNotificationsDto } from '@app/shared/dtos/notification/get-all-notification.dto';
 import { DeleteNotificationDto } from '@app/shared/dtos/notification/delete-notifcation.dto';
 
@@ -9,10 +12,17 @@ import { DeleteNotificationDto } from '@app/shared/dtos/notification/delete-noti
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  @MessagePattern('notification.create')
+  @MessagePattern('notification.create.public')
   async createNotification(@Payload() data: CreateNotificationDto) {
-    console.log(data);
-    return this.notificationService.createNotification(data);
+    return this.notificationService.createNotificationPublicAdmin(data);
+  }
+
+  @MessagePattern('notification.create.private')
+  async createNotificationPrivateAdmin(
+    @Payload() data: CreateNotificationPrivateAdminDto,
+  ) {
+    console.log('>>>' + JSON.stringify(data));
+    return this.notificationService.createNotificationPrivateAdmin(data);
   }
 
   @MessagePattern('notification.get')

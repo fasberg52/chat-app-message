@@ -4,6 +4,7 @@ import { UserEntity } from './entities/user.entity';
 import { MessageEntity } from './entities/message.entity';
 import { NotificationEntity } from './entities/notification.entity';
 import { NotificationItemEntity } from './entities/notification-item.entity';
+import { FileEntity } from './entities/file.entity';
 
 dotenvConfig({ path: '.env' });
 
@@ -19,6 +20,7 @@ export const datasource = new DataSource({
     MessageEntity,
     NotificationEntity,
     NotificationItemEntity,
+    FileEntity,
   ],
   migrations: [__dirname + '/migrations/*.ts'],
   synchronize: false,
