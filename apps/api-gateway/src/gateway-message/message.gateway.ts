@@ -61,7 +61,6 @@ export class MessageGateway
         ...data,
       }),
     );
-    console.log('result', result);
 
     await this.server.clients.forEach((ws) => {
       ws.send(JSON.stringify({ event: 'sendMessage', data: result }));

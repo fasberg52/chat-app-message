@@ -6,6 +6,7 @@ import { FileEntity } from '@app/database/entities/file.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileTypeEnum } from '@app/database/enums/file.enum';
+import { S3Service } from './s3.service';
 
 @Injectable()
 export class FileUploadService {
@@ -16,40 +17,28 @@ export class FileUploadService {
     @InjectRepository(FileEntity)
     private readonly fileRepository: Repository<FileEntity>,
     private readonly configService: ConfigService,
-  ) {
-    this.s3 = new AWS.S3({
-      endpoint: this.configService.get<string>('LIARA_STORAGE_ENDPOINT'),
-      accessKeyId: this.configService.get<string>('LIARA_ACCESS_KEY'),
-      secretAccessKey: this.configService.get<string>('LIARA_SECRET_KEY'),
-      s3ForcePathStyle: true,
-    });
-
-    this.bucketName = this.configService.get<string>('LIARA_BUCKET_NAME');
-  }
+    private readonly s3Service: S3Service,
+  ) {}
 
   async uploadFile(file: Express.Multer.File): Promise<FileEntity> {
-    const fileName = `${uuidv4()}`;
-    const params: AWS.S3.PutObjectRequest = {
-      Bucket: this.bucketName,
-      Key: fileName,
-      Body: file.buffer,
+    const key = uuidv4();
+    const s3Response = await this.s3Service.uploadFile(file, {
+      Key: key,
       ContentType: file.mimetype,
+    });
+    const data = {
+      key,
+      size: Number(file.size) || 0,
+      link: s3Response.url,
+      type: this.getFileType(file.mimetype),
+      mimeType: file.mimetype,
     };
 
-    await this.s3.putObject(params).promise();
-    const fileUrl = `https://${this.bucketName}.storage.liara.ir/${fileName}`;
-    console.log(file.size);
-
     const fileEntity = this.fileRepository.create({
-      key: fileName,
-      mimeType: file.mimetype,
-      size: file.size,
-      link: fileUrl,
-      type: this.getFileType(file.mimetype),
+      ...data,
     });
 
     await this.fileRepository.save(fileEntity);
-
     return fileEntity;
   }
 

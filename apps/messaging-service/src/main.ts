@@ -17,6 +17,5 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   await app.listen();
-  console.log('Messaging service is running on port 3002');
 }
 bootstrap();

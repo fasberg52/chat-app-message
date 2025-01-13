@@ -11,8 +11,9 @@ async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule);
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
-    options: { host: '127.0.0.1', port: 3009 },
   });
+
+  app.enableCors();
 
   app.useGlobalPipes(
     new ValidationPipe({

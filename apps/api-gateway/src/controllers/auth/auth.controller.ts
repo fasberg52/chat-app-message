@@ -19,8 +19,8 @@ export class AuthController {
   @Client({
     transport: Transport.TCP,
     options: {
-      host: '127.0.0.1',
-      port: 3001,
+      host: process.env.USER_SERVICE_HOST,
+      port: Number(process.env.USER_SERVICE_PORT),
     },
   })
   private userServiceClient: ClientProxy;

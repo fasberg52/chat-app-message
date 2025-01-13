@@ -40,6 +40,14 @@ import { FileController } from './controllers/file/file.controller';
           port: new ConfigService().get<number>('MESSAGE_SERVICE_PORT'),
         },
       },
+      {
+        name: MicroserviceNameEnum.NOTIFICATION_SERVICE,
+        transport: Transport.TCP,
+        options: {
+          host: new ConfigService().get<string>('NOTIFICATION_SERVICE_HOST'),
+          port: new ConfigService().get<number>('NOTIFICATION_SERVICE_PORT'),
+        },
+      },
     ]),
   ],
   controllers: [AuthController, NotficationController, FileController],

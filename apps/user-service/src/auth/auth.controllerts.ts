@@ -9,14 +9,11 @@ export class AuthController {
 
   @MessagePattern('auth.login')
   async login(@Payload() data: LoginDto) {
-    console.log(`login >>> ${data}`);
     return this.authService.login(data);
   }
 
   @MessagePattern('auth.signup')
   async signup(@Payload() data: SignupDto) {
-    console.log(`signup >>> ${JSON.stringify(data)}`);
-
     return this.authService.singup(data);
   }
 }

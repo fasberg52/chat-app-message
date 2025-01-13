@@ -21,7 +21,6 @@ export class NotificationController {
   async createNotificationPrivateAdmin(
     @Payload() data: CreateNotificationPrivateAdminDto,
   ) {
-    console.log('>>>' + JSON.stringify(data));
     return this.notificationService.createNotificationPrivateAdmin(data);
   }
 

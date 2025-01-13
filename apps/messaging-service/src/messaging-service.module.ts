@@ -9,6 +9,7 @@ import { MessageController } from './controllers/message.controller';
 import { FileUploadService } from './services/file.service';
 import { FileController } from './controllers/file.controller';
 import { FileEntity } from '@app/database/entities/file.entity';
+import { S3Service } from './services/s3.service';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { FileEntity } from '@app/database/entities/file.entity';
       inject: [ConfigService],
     }),
   ],
-  providers: [MessageService, FileUploadService],
+  providers: [MessageService, FileUploadService, S3Service],
   controllers: [MessageController, FileController],
 })
 export class MessagingServiceModule {}

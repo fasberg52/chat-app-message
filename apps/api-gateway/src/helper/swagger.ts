@@ -78,7 +78,6 @@ export class SwaggerHelper {
     const userPassRE = /^([^:]*):(.*)$/;
     const userPass = userPassRE.exec(credentialsDecoded);
     if (userPass[1] === this.username && userPass[2] === this.password) {
-      console.log('Authorization Successful.');
       next();
       return;
     }

@@ -8,7 +8,6 @@ export class FileController {
 
   @MessagePattern('file.upload')
   async uploadFile(@Payload() file: Express.Multer.File) {
-    console.log(`data is >>> ${JSON.stringify(file.size)}`);
 
     return this.fileService.uploadFile(file);
   }

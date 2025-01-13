@@ -1,15 +1,15 @@
-FROM node:18
+FROM node:22
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --force
 
 COPY . .
 
 RUN npm run build user-service
 
-EXPOSE 4000
+EXPOSE 3001
 
-CMD ["npm", "run", "start:dev", "user-service"]
+CMD ["npm", "run", "start:user-service"]

@@ -143,7 +143,6 @@ export class NotificationService {
       skip: (page - 1) * limit,
       take: limit,
     };
-    console.log(sort, sortBy);
     options = applySortingToFindOptions(options, sort, sortBy, 'id', 'DESC');
 
     const [notifications, count] =

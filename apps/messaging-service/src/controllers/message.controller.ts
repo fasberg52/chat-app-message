@@ -14,9 +14,7 @@ export class MessageController {
 
   @MessagePattern('messages.sendMessage')
   async handleMessage(@Payload() data: CreateMessageDto) {
-    console.log('Received message:', data);
     await this.messageService.createMessage(data);
-    console.log('Received message:', data);
     return { status: 'success', data: data };
   }
 }

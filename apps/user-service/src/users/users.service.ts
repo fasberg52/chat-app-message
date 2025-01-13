@@ -8,7 +8,6 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async createUser(dto: Partial<UserEntity>) {
-    console.log(`dto is ${JSON.stringify(dto)}`);
     const user = await this.userRepository.createUser(dto);
     return user;
   }
@@ -23,7 +22,6 @@ export class UserService {
 
   async existByEmail(email: string) {
     const user = await this.userRepository.findByEmail(email);
-    console.log(`user is ${user}`);
     return !!user;
   }
 

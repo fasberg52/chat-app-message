@@ -32,13 +32,11 @@ export class AuthService {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(dto.password, salt);
-    console.log(`data is ${dto}`);
     const user = await this.userService.createUser({
       ...dto,
       password: hashedPassword,
       role: UserRoleEunm.USER,
     });
-    console.log(`user is ${user}`);
 
     const accessToken = await this.generateToken(user);
     const userResponse = {
@@ -52,7 +50,6 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    console.log(dto);
     const user = await this.userService.findByEmail(dto.email);
     if (!user) {
       throw new NotFoundRpcException('نام کاربری یا رمز عبور اشتباه است');
