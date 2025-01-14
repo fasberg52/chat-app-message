@@ -17,10 +17,13 @@ import { TokenResponse } from '../../responses/user/token.response';
 @ApiBearerAuth()
 export class AuthController {
   @Client({
-    transport: Transport.TCP,
+    transport: Transport.RMQ, 
     options: {
-      host: process.env.USER_SERVICE_HOST,
-      port: Number(process.env.USER_SERVICE_PORT),
+      urls: [process.env.RMQ_URL], 
+      queue: process.env.USER_SERVICE_HOST, 
+      queueOptions: {
+        durable: false, 
+      },
     },
   })
   private userServiceClient: ClientProxy;

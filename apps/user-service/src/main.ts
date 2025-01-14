@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { UserServiceModule } from './user-service.module';
 import {
   MicroserviceOptions,
+  RmqOptions,
   TcpOptions,
   Transport,
 } from '@nestjs/microservices';
@@ -12,12 +13,15 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     UserServiceModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.RMQ,
       options: {
-        host: process.env.PUBLIC_HOST,
-        port: Number(process.env.USER_SERVICE_PORT),
+        urls: [process.env.RMQ_URL],
+        queue: process.env.USER_SERVICE_HOST,
+        queueOptions: {
+          durable: false,
+        },
       },
-    } as TcpOptions,
+    } as RmqOptions,
   );
 
   app.useGlobalFilters(new MicroExceptionFilter());

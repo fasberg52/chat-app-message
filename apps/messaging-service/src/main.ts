@@ -1,18 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { MessagingServiceModule } from './messaging-service.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { MicroserviceOptions, RmqOptions, Transport } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     MessagingServiceModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.RMQ,
       options: {
-        host: process.env.PUBLIC_HOST,
-        port: parseInt(process.env.MESSAGE_SERVICE_PORT),
+        urls: [process.env.RMQ_URL],
+        queue: process.env.MESSAGE_SERVICE_HOST,
+        queueOptions: {
+          durable: false,
+        },
       },
-    },
+    } as RmqOptions,
   );
 
   app.useGlobalPipes(new ValidationPipe());

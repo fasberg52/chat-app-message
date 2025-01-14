@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { NotificationServiceModule } from './notification-service.module';
 import {
   MicroserviceOptions,
+  RmqOptions,
   TcpOptions,
   Transport,
 } from '@nestjs/microservices';
@@ -12,12 +13,15 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     NotificationServiceModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.RMQ,
       options: {
-        host: process.env.PUBLIC_HOST,
-        port: parseInt(process.env.NOTIFICATION_SERVICE_PORT),
+        urls: [process.env.RMQ_URL],
+        queue: process.env.NOTIFICATOIN_SERVICE_HOST,
+        queueOptions: {
+          durable: false,
+        },
       },
-    } as TcpOptions,
+    } as RmqOptions,
   );
   app.useGlobalFilters(new MicroExceptionFilter());
   app.useGlobalPipes(

@@ -32,10 +32,13 @@ import { UpdateNotificationDto } from '@app/shared/dtos/notification/update-noti
 @ApiBearerAuth()
 export class NotficationController {
   @Client({
-    transport: Transport.TCP,
+    transport: Transport.RMQ, 
     options: {
-      host: process.env.NOTIFICATION_SERVICE_HOST,
-      port: Number(process.env.NOTIFICATION_SERVICE_PORT),
+      urls: [process.env.RMQ_URL], 
+      queue: process.env.NOTIFICATION_SERVICE_HOST, 
+      queueOptions: {
+        durable: false, 
+      },
     },
   })
   private notificationServiceClient: ClientProxy;

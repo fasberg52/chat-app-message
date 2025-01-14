@@ -26,26 +26,35 @@ import { FileController } from './controllers/file/file.controller';
     ClientsModule.register([
       {
         name: MicroserviceNameEnum.USER_SERVICE,
-        transport: Transport.TCP,
+        transport: Transport.RMQ,
         options: {
-          host: new ConfigService().get<string>('USER_SERVICE_HOST'),
-          port: new ConfigService().get<number>('USER_SERVICE_PORT'),
+          urls: [process.env.RMQ_URL],
+          queue: process.env.USER_SERVICE_HOST,
+          queueOptions: {
+            durable: false,
+          },
         },
       },
       {
         name: MicroserviceNameEnum.MESSAGE_SERVICE,
-        transport: Transport.TCP,
+        transport: Transport.RMQ,
         options: {
-          host: new ConfigService().get<string>('MESSAGE_SERVICE_HOST'),
-          port: new ConfigService().get<number>('MESSAGE_SERVICE_PORT'),
+          urls: [process.env.RMQ_URL],
+          queue: process.env.MESSAGE_SERVICE_HOST,
+          queueOptions: {
+            durable: false,
+          },
         },
       },
       {
         name: MicroserviceNameEnum.NOTIFICATION_SERVICE,
-        transport: Transport.TCP,
+        transport: Transport.RMQ,
         options: {
-          host: new ConfigService().get<string>('NOTIFICATION_SERVICE_HOST'),
-          port: new ConfigService().get<number>('NOTIFICATION_SERVICE_PORT'),
+          urls: [process.env.RMQ_URL],
+          queue: process.env.NOTIFICATION_SERVICE_HOST,
+          queueOptions: {
+            durable: false,
+          },
         },
       },
     ]),

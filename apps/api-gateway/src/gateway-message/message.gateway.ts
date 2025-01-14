@@ -26,10 +26,13 @@ export class MessageGateway
   protected server: Server;
 
   @Client({
-    transport: Transport.TCP,
+    transport: Transport.RMQ,
     options: {
-      host: '127.0.0.1',
-      port: 3002,
+      urls: [process.env.RMQ_URL],
+      queue: process.env.MESSAGING_SERVICE_HOST,
+      queueOptions: {
+        durable: false,
+      },
     },
   })
   private messageServiceClient: ClientProxy;

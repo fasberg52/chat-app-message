@@ -1,6 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { ApiGatewayModule } from './api-gateway.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import {
+  MicroserviceOptions,
+  RmqOptions,
+  Transport,
+} from '@nestjs/microservices';
 import { config as dotenvConfig } from 'dotenv';
 import { SwaggerHelper } from './helper/swagger';
 import { ValidationPipe } from '@nestjs/common';
@@ -9,8 +13,20 @@ dotenvConfig({ path: '.env' });
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule);
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
+  app.connectMicroservice<RmqOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [process.env.RMQ_URL],
+      prefetchCount: 1,
+      persistent: true,
+      queueOptions: {
+        durable: true,
+      },
+      socketOptions: {
+        heartbeatIntervalInSeconds: 60,
+        reconnectTimeInSeconds: 5,
+      },
+    },
   });
 
   app.enableCors();

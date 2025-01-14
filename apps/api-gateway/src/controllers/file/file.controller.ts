@@ -22,10 +22,13 @@ import { CheckFileDto } from '@app/shared/dtos/file/check-file.dto';
 @ApiBearerAuth()
 export class FileController {
   @Client({
-    transport: Transport.TCP,
+    transport: Transport.RMQ, 
     options: {
-      host: process.env.MESSAGE_SERVICE_HOST,
-      port: Number(process.env.MESSAGE_SERVICE_PORT),
+      urls: [process.env.RMQ_URL], 
+      queue: process.env.MESSAGE_SERVICE_HOST, 
+      queueOptions: {
+        durable: false, 
+      },
     },
   })
   private messagingServiceClient: ClientProxy;
