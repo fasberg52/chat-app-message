@@ -5,7 +5,7 @@ export class EncryptionService {
   private readonly secretKey: Buffer;
 
   constructor() {
-    const key = process.env.ENCRYPTION_KEY;
+    const key = process.env.ENCRYPTION_KEY || 'aksdkhqwgekqwdmasndk';
     this.secretKey = crypto.createHash('sha256').update(key).digest();
   }
 

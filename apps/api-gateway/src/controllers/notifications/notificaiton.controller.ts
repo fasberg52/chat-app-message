@@ -44,7 +44,7 @@ export class NotficationController {
   private notificationServiceClient: ClientProxy;
 
   @ApiOkResponse(NotificationsListResponse.getApiDoc())
-  @Roles(UserRoleEunm.ADMIN)
+  @Roles(UserRoleEunm.ADMIN, UserRoleEunm.USER)
   @Get()
   async getNotifications(
     @Query() data: GetNotificationsDto,

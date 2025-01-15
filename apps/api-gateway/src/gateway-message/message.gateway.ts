@@ -69,28 +69,23 @@ export class MessageGateway
         throw new WsException('Invalid message data');
       }
 
-      const hashedMessage = await this.encryptionService.hashMessage(
-        data.content,
-      );
-      console.log('hashedMessage', hashedMessage);
+     
 
       let result;
       try {
         result = await firstValueFrom(
           this.messageServiceClient.send('messages.sendMessages', {
-            content: hashedMessage,
+            content: data.content,
             receiverId: data.receiverId,
             type: data.type,
           }),
         );
-        console.log('Result from message service:', result);
       } catch (err) {
-        console.error('Error in message service call:', err);
+        console.error('err:', err);
         throw new WsException('Error sending message to the service');
       }
 
       if (!result) {
-        console.error('No result received from the message service');
         throw new WsException('Error processing the message');
       }
 
@@ -100,7 +95,7 @@ export class MessageGateway
 
       return { event: 'sendMessage', data: result };
     } catch (err) {
-      console.error('Error in handleMessage:', err);
+      console.error('err:', err);
       throw new WsException('An error occurred while sending the message');
     }
   }
