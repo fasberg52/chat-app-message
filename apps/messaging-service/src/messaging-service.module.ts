@@ -10,6 +10,7 @@ import { FileUploadService } from './services/file.service';
 import { FileController } from './controllers/file.controller';
 import { FileEntity } from '@app/database/entities/file.entity';
 import { S3Service } from './services/s3.service';
+import { UserEntity } from '@app/database';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { S3Service } from './services/s3.service';
         autoLoadEntities: true,
       }),
     }),
-    TypeOrmModule.forFeature([MessageEntity, FileEntity]),
+    TypeOrmModule.forFeature([MessageEntity, FileEntity, UserEntity]),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),

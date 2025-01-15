@@ -1,10 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ApiGatewayModule } from './api-gateway.module';
-import {
-  MicroserviceOptions,
-  RmqOptions,
-  Transport,
-} from '@nestjs/microservices';
+import { RmqOptions, Transport } from '@nestjs/microservices';
 import { config as dotenvConfig } from 'dotenv';
 import { SwaggerHelper } from './helper/swagger';
 import { ValidationPipe } from '@nestjs/common';
@@ -20,7 +16,7 @@ async function bootstrap() {
       prefetchCount: 1,
       persistent: true,
       queueOptions: {
-        durable: true,
+        durable: false,
       },
       socketOptions: {
         heartbeatIntervalInSeconds: 60,

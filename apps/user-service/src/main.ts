@@ -3,7 +3,6 @@ import { UserServiceModule } from './user-service.module';
 import {
   MicroserviceOptions,
   RmqOptions,
-  TcpOptions,
   Transport,
 } from '@nestjs/microservices';
 import { MicroExceptionFilter } from '@app/common/filters/rpc-exception.filter';

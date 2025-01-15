@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, retry } from 'rxjs';
 import { TokenResponse } from '../../responses/user/token.response';
 
 @Controller('auth')
@@ -17,12 +17,12 @@ import { TokenResponse } from '../../responses/user/token.response';
 @ApiBearerAuth()
 export class AuthController {
   @Client({
-    transport: Transport.RMQ, 
+    transport: Transport.RMQ,
     options: {
-      urls: [process.env.RMQ_URL], 
-      queue: process.env.USER_SERVICE_HOST, 
+      urls: [process.env.RMQ_URL],
+      queue: process.env.USER_SERVICE_HOST,
       queueOptions: {
-        durable: false, 
+        durable: false,
       },
     },
   })
@@ -34,7 +34,9 @@ export class AuthController {
   async login(@Body() data: LoginDto): Promise<TokenResponse> {
     try {
       const result = await firstValueFrom(
-        this.userServiceClient.send('auth.login', data),
+        this.userServiceClient
+          .send('auth.login', data)
+          .pipe(retry({ count: 3, delay: 1000 })),
       );
       return new TokenResponse(result.accessToken);
     } catch (error) {

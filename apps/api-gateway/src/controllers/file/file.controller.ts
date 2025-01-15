@@ -22,12 +22,12 @@ import { CheckFileDto } from '@app/shared/dtos/file/check-file.dto';
 @ApiBearerAuth()
 export class FileController {
   @Client({
-    transport: Transport.RMQ, 
+    transport: Transport.RMQ,
     options: {
-      urls: [process.env.RMQ_URL], 
-      queue: process.env.MESSAGE_SERVICE_HOST, 
+      urls: [process.env.RMQ_URL],
+      queue: process.env.MESSAGING_SERVICE_HOST,
       queueOptions: {
-        durable: false, 
+        durable: false,
       },
     },
   })

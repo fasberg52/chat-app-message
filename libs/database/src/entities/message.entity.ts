@@ -7,13 +7,7 @@ import {
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { UserEntity } from './user.entity';
 import { MessageTypeEnum } from '../enums/message.enum';
 

@@ -3,7 +3,6 @@ import { NotificationServiceModule } from './notification-service.module';
 import {
   MicroserviceOptions,
   RmqOptions,
-  TcpOptions,
   Transport,
 } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
@@ -16,7 +15,7 @@ async function bootstrap() {
       transport: Transport.RMQ,
       options: {
         urls: [process.env.RMQ_URL],
-        queue: process.env.NOTIFICATOIN_SERVICE_HOST,
+        queue: process.env.NOTIFICATION_SERVICE_HOST,
         queueOptions: {
           durable: false,
         },

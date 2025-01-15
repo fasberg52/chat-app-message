@@ -16,23 +16,38 @@ export class MessageService {
       ...data,
       createdAt: new Date(),
     };
+
     const message = this.messageRepository.create(newMessage);
     return this.messageRepository.save(message);
   }
 
   async getMessages(
-    userId: number,
+    senderId: number,
     receiverId: number,
-  ): Promise<MessageEntity[]> {
-    return this.messageRepository.find({
+    page: number,
+    limit: number,
+  ): Promise<[MessageEntity[], number]> {
+    const [result, count] = await this.messageRepository.findAndCount({
       where: [
-        { senderId: userId, receiverId },
-        { senderId: receiverId, receiverId: userId },
+        { senderId, receiverId },
+        { senderId: receiverId, receiverId: senderId },
       ],
       order: {
-        createdAt: 'ASC',
+        createdAt: 'DESC',
       },
-      relations: ['sender', 'receiver'],
+
+      select: {
+        id: true,
+        senderId: true,
+        receiverId: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
+    return [result, count];
   }
 }

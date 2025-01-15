@@ -57,6 +57,7 @@
     "messaging-service": "0.1.2-b2",
     "multer": "1.4.5-lts.1",
     "nestjs-form-data": "^1.9.92",
+    "openpgp": "^6.0.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",

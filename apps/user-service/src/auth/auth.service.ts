@@ -30,6 +30,7 @@ export class AuthService {
     if (exitingUser) {
       throw new BadRequestRpcException('این ایمیل وجود از قبل وجود دارد');
     }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(dto.password, salt);
     const user = await this.userService.createUser({

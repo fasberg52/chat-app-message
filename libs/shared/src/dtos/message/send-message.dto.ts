@@ -13,12 +13,7 @@ export class SendMessageDto {
   @IsString()
   content: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: MessageTypeEnum })
   @IsEnum(MessageTypeEnum)
   type: MessageTypeEnum;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  senderId: number;
 }

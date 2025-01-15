@@ -9,13 +9,14 @@ import {
   WsException,
   WsResponse,
 } from '@nestjs/websockets';
-import { Server, WebSocket } from 'ws';
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Server, WebSocket } from 'ws'; // Importing 'ws' instead of 'socket.io'
+import { Injectable } from '@nestjs/common';
 import { SendMessageDto } from '@app/shared/dtos/message/send-message.dto';
 import { ClientProxy, Client, Transport } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { EncryptionService } from '@app/shared/utils/encrypt-data.utils';
 
 @Injectable()
 @WebSocketGateway(8080, { cors: { origin: '*' } })
@@ -37,47 +38,81 @@ export class MessageGateway
   })
   private messageServiceClient: ClientProxy;
 
+  constructor(private readonly encryptionService: EncryptionService) {}
+
   async handleConnection(client: WebSocket) {
     console.log('Client connected:', client.readyState);
+
+    client.on('message', (data: string) => {
+      const { username, password } = JSON.parse(data);
+      client['data'] = { username, password };
+      console.log('Authenticated:', client);
+    });
   }
 
   async handleDisconnect(client: WebSocket) {
     console.log('Client disconnected:', client);
   }
 
-  @SubscribeMessage('sendMessage')
+  @SubscribeMessage('sendMessages')
   async handleMessage(
     @ConnectedSocket() client: WebSocket,
     @MessageBody() data: SendMessageDto,
   ): Promise<WsResponse<any>> {
-    console.log('Triggered sendMessage event:', data);
+    try {
+      console.log('Triggered sendMessage event:', data);
 
-    const dtoInstance = plainToInstance(SendMessageDto, data);
-    const errors = await validate(dtoInstance);
-    if (errors.length > 0) {
-      console.error('Validation errors:', errors);
-      throw new WsException('Invalid message data');
+      const dtoInstance = plainToInstance(SendMessageDto, data);
+      const errors = await validate(dtoInstance);
+      if (errors.length > 0) {
+        console.error('Validation errors:', errors);
+        throw new WsException('Invalid message data');
+      }
+
+      const hashedMessage = await this.encryptionService.hashMessage(
+        data.content,
+      );
+      console.log('hashedMessage', hashedMessage);
+
+      let result;
+      try {
+        result = await firstValueFrom(
+          this.messageServiceClient.send('messages.sendMessages', {
+            content: hashedMessage,
+            receiverId: data.receiverId,
+            type: data.type,
+          }),
+        );
+        console.log('Result from message service:', result);
+      } catch (err) {
+        console.error('Error in message service call:', err);
+        throw new WsException('Error sending message to the service');
+      }
+
+      if (!result) {
+        console.error('No result received from the message service');
+        throw new WsException('Error processing the message');
+      }
+
+      this.server.clients.forEach((ws) => {
+        ws.send(JSON.stringify({ event: 'sendMessage', data: result }));
+      });
+
+      return { event: 'sendMessage', data: result };
+    } catch (err) {
+      console.error('Error in handleMessage:', err);
+      throw new WsException('An error occurred while sending the message');
     }
-
-    const result = await firstValueFrom(
-      this.messageServiceClient.send('messages.sendMessage', {
-        ...data,
-      }),
-    );
-
-    await this.server.clients.forEach((ws) => {
-      ws.send(JSON.stringify({ event: 'sendMessage', data: result }));
-    });
-    return { event: 'sendMessage', data: result };
   }
 
-  @SubscribeMessage('getMessages')
+  @SubscribeMessage('messages.getMessages')
   async getMessages(
-    @ConnectedSocket() client: WebSocket & { user?: any },
+    @ConnectedSocket() client: WebSocket,
     @MessageBody() receiverId: number,
   ) {
-    const userId = client.user?.id;
+    const userId = client['data']?.userId;
     console.log('getMessages', userId, receiverId);
+
     const result = await this.messageServiceClient
       .send('getMessages', {
         userId,
@@ -85,9 +120,8 @@ export class MessageGateway
       })
       .toPromise();
 
-    this.server.clients.forEach((ws) => {
-      ws.send(JSON.stringify({ event: 'getMessages', data: result }));
-    });
+    client.send(JSON.stringify({ event: 'getMessages', data: result }));
+
     return result;
   }
 }

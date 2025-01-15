@@ -10,6 +10,7 @@ COPY . .
 RUN npm run build messaging-service
 
 EXPOSE 3002
+EXPOSE 8080
 
 CMD ["npm", "run", "start:dev", "messaging-service"]
 

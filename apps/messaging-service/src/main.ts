@@ -1,6 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { MessagingServiceModule } from './messaging-service.module';
-import { MicroserviceOptions, RmqOptions, Transport } from '@nestjs/microservices';
+import {
+  MicroserviceOptions,
+  RmqOptions,
+  Transport,
+} from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -10,7 +14,8 @@ async function bootstrap() {
       transport: Transport.RMQ,
       options: {
         urls: [process.env.RMQ_URL],
-        queue: process.env.MESSAGE_SERVICE_HOST,
+        queue: process.env.MESSAGING_SERVICE_HOST,
+        noAck: false,
         queueOptions: {
           durable: false,
         },

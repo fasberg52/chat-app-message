@@ -11,6 +11,8 @@ import { RoleGuard } from './controllers/auth/guards/role.guard';
 import { NotficationController } from './controllers/notifications/notificaiton.controller';
 import { AuthController } from './controllers/auth/auth.controller';
 import { FileController } from './controllers/file/file.controller';
+import { EncryptionService } from '@app/shared/utils/encrypt-data.utils';
+import { MessageController } from './controllers/message/message.controller';
 
 @Module({
   imports: [
@@ -40,7 +42,7 @@ import { FileController } from './controllers/file/file.controller';
         transport: Transport.RMQ,
         options: {
           urls: [process.env.RMQ_URL],
-          queue: process.env.MESSAGE_SERVICE_HOST,
+          queue: process.env.MESSAGING_SERVICE_HOST,
           queueOptions: {
             durable: false,
           },
@@ -59,8 +61,14 @@ import { FileController } from './controllers/file/file.controller';
       },
     ]),
   ],
-  controllers: [AuthController, NotficationController, FileController],
+  controllers: [
+    AuthController,
+    NotficationController,
+    FileController,
+    MessageController,
+  ],
   providers: [
+    EncryptionService,
     MessageGateway,
     JwtService,
     ApiGatewayService,

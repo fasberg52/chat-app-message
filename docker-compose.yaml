@@ -34,6 +34,7 @@ services:
     depends_on:
       - user-service
       - notification-service
+      - messaging-service
       - rabbitmq
     networks:
       - nest-network
@@ -113,8 +114,31 @@ services:
       dockerfile: ./apps/messaging-service/Dockerfile
     ports:
       - '3002:3002'
-    env_file:
-      - .env
+      - '8081:8080'
+    environment:
+      - RMQ_URL=amqp://rabbitmq:5672
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=2434127reza
+      - DATABASE_NAME=chat
+      - JWT_SECRET=2434127reza
+      - JWT_EXPIRATION=1h
+      - JWT_REFRESH_SECRET=2434127reza
+      - JWT_REFRESH_EXPIRATION=7d
+      - USER_SERVICE_HOST=user-service
+      - NOTIFICATION_SERVICE_HOST=notification-service
+      - MESSAGING_SERVICE_HOST=message-service
+      - USER_SERVICE_PORT=3001
+      - NOTIFICATION_SERVICE_PORT=3003
+      - MESSAGING_SERVICE_PORT=3002
+      - PORT=3000
+      - LIARA_STORAGE_ENDPOINT=https://storage.iran.liara.space
+      - LIARA_ACCESS_KEY=akf0eedbes55dbci
+      - LIARA_SECRET_KEY=2c38ae1f-c1ba-48cb-bba4-6d8dffd52823
+      - LIARA_BUCKET_NAME=bucketbun
+      - LIARA_REGION=default
+
     depends_on:
       - postgres
       - rabbitmq
@@ -142,8 +166,8 @@ services:
     restart: always
     hostname: rabbitmq
     ports:
-      - '5672:5672'
-      - '15672:15672'
+      - '5673:5672'
+      - '15673:15672'
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
