@@ -24,7 +24,12 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1-پکیج ها استفاده شده در پروژه از داخل package.json قابل مشاهده است.
+2-سیستم ارسال پیام و نوتیفیکیشن از طریق میکروسرویس
+3-ارسال فایل
+4-رمز گذاری پیام ها
+5-احراز هویت کاربر
+
 
 
 ## Migration setup
