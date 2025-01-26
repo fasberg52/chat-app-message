@@ -45,17 +45,15 @@ $ npm run migration:run
 $ pnpm install
 ```
 
-## Compile and run the project
+## Compile and run the project Manual
 
 ```bash
 # development
-$ pnpm run start
+$ pnpm run start:api-gateway
+$ pnpm run start:user-service
+$ pnpm run start:messaging-service
+$ pnpm run start:notification-service
 
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
 ```
 
 ## Run tests
@@ -71,7 +69,7 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
-## Docker setup
+## Use with Docker setup
 
 ```bash
 $ docker-compose up -d --build
